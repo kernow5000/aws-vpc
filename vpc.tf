@@ -73,6 +73,10 @@ resource "aws_nat_gateway" "vpc-tf-ngw" {
   allocation_id = aws_eip.vpc-tf-ngw-eip.id
   subnet_id     = aws_subnet.vpc-tf-pub_subnet_1.id
   depends_on    = [aws_internet_gateway.vpc-tf-igw]
+
+  tags = {
+    Name = "vpc-tf-ngw"
+  }
 }
 
 # Grant the VPC internet access on its main route table
