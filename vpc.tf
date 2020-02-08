@@ -9,7 +9,7 @@ resource "aws_vpc" "vpc-tf" {
 }
 
 # Create two public subnets for EC2 instances etc
-resource "aws_subnet" "pub_subnet_1" {
+resource "aws_subnet" "vpc-tf-pub_subnet_1" {
   vpc_id                  = aws_vpc.vpc-tf.id
   cidr_block              = var.pub_subnet_1_cidr
   availability_zone       = "eu-west-1a"
@@ -20,7 +20,7 @@ resource "aws_subnet" "pub_subnet_1" {
   }
 }
 
-resource "aws_subnet" "pub_subnet_2" {
+resource "aws_subnet" "vpc-tf-pub_subnet_2" {
   vpc_id                  = aws_vpc.vpc-tf.id
   cidr_block              = var.pub_subnet_2_cidr
   availability_zone       = "eu-west-1b"
@@ -32,7 +32,7 @@ resource "aws_subnet" "pub_subnet_2" {
 }
 
 # Create two private subnets for RDS instances etc (outgoing internet via NAT gateway only)
-resource "aws_subnet" "priv_subnet_1" {
+resource "aws_subnet" "vpc-tf-priv_subnet_1" {
   vpc_id                  = aws_vpc.vpc-tf.id
   cidr_block              = var.priv_subnet_1_cidr
   availability_zone       = "eu-west-1a"
@@ -43,7 +43,7 @@ resource "aws_subnet" "priv_subnet_1" {
   }
 }
 
-resource "aws_subnet" "priv_subnet_2" {
+resource "aws_subnet" "vpc-tf-priv_subnet_2" {
   vpc_id                  = aws_vpc.vpc-tf.id
   cidr_block              = var.priv_subnet_2_cidr
   availability_zone       = "eu-west-1b"
@@ -71,7 +71,7 @@ resource "aws_eip" "vpc-tf-ngw-eip" {
 # Create a NAT Gateway
 resource "aws_nat_gateway" "vpc-tf-ngw" {
   allocation_id = aws_eip.vpc-tf-ngw-eip.id
-  subnet_id     = aws_subnet.pub_subnet_1.id
+  subnet_id     = aws_subnet.vpc-tf-pub_subnet_1.id
   depends_on    = [aws_internet_gateway.vpc-tf-igw]
 }
 
@@ -84,7 +84,7 @@ resource "aws_route" "internet_access" {
 }
 
 # Create routing tables for public and private subnets
-resource "aws_route_table" "pub_subnet_1_routetable" {
+resource "aws_route_table" "vpc-tf-pub_subnet_1_routetable" {
   vpc_id = aws_vpc.vpc-tf.id
 
   route {
@@ -97,7 +97,7 @@ resource "aws_route_table" "pub_subnet_1_routetable" {
   }
 }
 
-resource "aws_route_table" "pub_subnet_2_routetable" {
+resource "aws_route_table" "vpc-tf-pub_subnet_2_routetable" {
   vpc_id = aws_vpc.vpc-tf.id
 
   route {
@@ -110,7 +110,7 @@ resource "aws_route_table" "pub_subnet_2_routetable" {
   }
 }
 
-resource "aws_route_table" "priv_subnet_1_routetable" {
+resource "aws_route_table" "vpc-tf-priv_subnet_1_routetable" {
   vpc_id = aws_vpc.vpc-tf.id
 
   route {
@@ -123,7 +123,7 @@ resource "aws_route_table" "priv_subnet_1_routetable" {
   }
 }
 
-resource "aws_route_table" "priv_subnet_2_routetable" {
+resource "aws_route_table" "vpc-tf-priv_subnet_2_routetable" {
   vpc_id = aws_vpc.vpc-tf.id
 
   route {
@@ -137,23 +137,23 @@ resource "aws_route_table" "priv_subnet_2_routetable" {
 }
 
 # Associate routing tables with subnets
-resource "aws_route_table_association" "pub_subnet_1_routetable_association" {
-  subnet_id      = aws_subnet.pub_subnet_1.id
-  route_table_id = aws_route_table.pub_subnet_1_routetable.id
+resource "aws_route_table_association" "vpc-tf-pub_subnet_1_routetable_association" {
+  subnet_id      = aws_subnet.vpc-tf-pub_subnet_1.id
+  route_table_id = aws_route_table.vpc-tf-pub_subnet_1_routetable.id
 }
 
-resource "aws_route_table_association" "pub_subnet_2_routetable_association" {
-  subnet_id      = aws_subnet.pub_subnet_2.id
-  route_table_id = aws_route_table.pub_subnet_2_routetable.id
+resource "aws_route_table_association" "vpc-tf-pub_subnet_2_routetable_association" {
+  subnet_id      = aws_subnet.vpc-tf-pub_subnet_2.id
+  route_table_id = aws_route_table.vpc-tf-pub_subnet_2_routetable.id
 }
 
-resource "aws_route_table_association" "priv_subnet_1_routetable_association" {
-  subnet_id      = aws_subnet.priv_subnet_1.id
-  route_table_id = aws_route_table.priv_subnet_1_routetable.id
+resource "aws_route_table_association" "vpc-tf-priv_subnet_1_routetable_association" {
+  subnet_id      = aws_subnet.vpc-tf-priv_subnet_1.id
+  route_table_id = aws_route_table.vpc-tf-priv_subnet_1_routetable.id
 }
 
 resource "aws_route_table_association" "priv_subnet_2_routetable_association" {
-  subnet_id      = aws_subnet.priv_subnet_2.id
-  route_table_id = aws_route_table.priv_subnet_2_routetable.id
+  subnet_id      = aws_subnet.vpc-tf-priv_subnet_2.id
+  route_table_id = aws_route_table.vpc-tf-priv_subnet_2_routetable.id
 }
 
