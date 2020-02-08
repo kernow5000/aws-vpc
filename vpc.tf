@@ -66,6 +66,10 @@ resource "aws_internet_gateway" "vpc-tf-igw" {
 resource "aws_eip" "vpc-tf-ngw-eip" {
   vpc        = true
   depends_on = [aws_internet_gateway.vpc-tf-igw]
+  
+  tags = {
+    Name = "vpc-tf-ngw-eip"
+  }
 }
 
 # Create a NAT Gateway
