@@ -164,4 +164,3 @@ resource "aws_route_table_association" "priv_subnet_2_routetable_association" {
   subnet_id      = aws_subnet.vpc-tf-priv_subnet_2.id
   route_table_id = aws_route_table.vpc-tf-priv_subnet_2_routetable.id
 }
-
